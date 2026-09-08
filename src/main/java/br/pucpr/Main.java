@@ -10,6 +10,7 @@ import br.pucpr.planet.PlanetaColumns;
 import br.pucpr.table.Table;
 import br.pucpr.table.TableBuilder;
 import br.pucpr.table.model.ColumnTableData;
+import br.pucpr.table.model.PagedTableData;
 import br.pucpr.user.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -51,6 +52,13 @@ public class Main {
     System.out.println("IMPRIMINDO PLANETAS");
     System.out.println("-------------------");
     new Table(new ColumnTableData<>(planetas, PlanetaColumns.values())).print();
+
+    System.out.println("PLANETAS - PAGINA 2");
+    System.out.println("------------------");
+    new Table(
+            new PagedTableData(
+                new ColumnTableData<>(planetas, PlanetaColumns.values()), 1, 3))
+        .print();
 
     System.out.println("PLANETAS REFLETIDOS");
     System.out.println("-------------------");
