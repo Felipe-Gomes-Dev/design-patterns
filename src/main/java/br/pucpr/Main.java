@@ -9,6 +9,7 @@ import br.pucpr.planet.Planet;
 import br.pucpr.planet.PlanetaColumns;
 import br.pucpr.table.Table;
 import br.pucpr.table.TableBuilder;
+import br.pucpr.table.TableInfo;
 import br.pucpr.table.model.ColumnTableData;
 import br.pucpr.table.model.PagedTableData;
 import br.pucpr.user.*;
@@ -74,5 +75,26 @@ public class Main {
                         "Distance (au)",
                         p -> "%,11.2f".formatted(Planet.kmToAu(p.sunDistanceKm()))))
         .print();
+
+    System.out.println();
+    System.out.println("OBSERVER - MUDANCAS NOS DADOS");
+    System.out.println("------------------------------");
+    var dados =
+        new ColumnTableData<>(
+            usuarios, new IdColumn(), new CpfColumn(), new EmailColumn(), new NameColumn());
+    var tabela = new Table(dados, LIGHT, true);
+    var info = new TableInfo(dados);
+
+    System.out.println("Estado inicial:");
+    tabela.print();
+    info.update();
+
+    System.out.println();
+    System.out.println("Adicionando usuario...");
+    dados.add(new User(107L, "Fernanda Lima", "fernanda@email.com", "99988877766"));
+
+    System.out.println();
+    System.out.println("Removendo usuario...");
+    dados.remove(usuarios.getFirst());
   }
 }

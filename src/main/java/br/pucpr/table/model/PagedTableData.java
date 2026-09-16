@@ -1,8 +1,11 @@
 package br.pucpr.table.model;
 
+import br.pucpr.table.observer.AbstractSubject;
+import br.pucpr.table.observer.Observer;
+import br.pucpr.table.observer.Subject;
 import java.util.Objects;
 
-public final class PagedTableData implements TableData {
+public final class PagedTableData extends AbstractSubject implements TableData, Observer {
   private final TableData source;
   private final int page;
   private final int pageSize;
@@ -21,6 +24,15 @@ public final class PagedTableData implements TableData {
     this.page = page;
     this.pageSize = pageSize;
     this.firstRow = (long) page * pageSize;
+
+    if (source instanceof Subject subject) {
+      subject.attach(this);
+    }
+  }
+
+  @Override
+  public void update() {
+    notifyObservers();
   }
 
   @Override

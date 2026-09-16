@@ -1,10 +1,12 @@
 package br.pucpr.table;
 
 import br.pucpr.table.model.TableData;
+import br.pucpr.table.observer.Observer;
+import br.pucpr.table.observer.Subject;
 import br.pucpr.table.reflection.Column;
 import java.util.ArrayList;
 
-public final class Table {
+public final class Table implements Observer {
   private TableData data;
   private Theme theme;
   private boolean alignRight;
@@ -16,6 +18,7 @@ public final class Table {
     this.data = data;
     setTheme(theme);
     this.alignRight = alignRight;
+    attachTo(data);
   }
 
   public Table(TableData data, Theme theme) {
@@ -31,7 +34,17 @@ public final class Table {
   }
 
   public void setData(TableData data) {
+    if (data == null) {
+      throw new IllegalArgumentException("Data cannot be null");
+    }
+    detachFrom(this.data);
     this.data = data;
+    attachTo(data);
+  }
+
+  @Override
+  public void update() {
+    print();
   }
 
   public Theme getTheme() {
@@ -109,5 +122,17 @@ public final class Table {
     lines.add(borderLine);
     final var s = isAlignRight() ? "                    " : "";
     return lines.stream().reduce("", (a, b) -> a + s + b + "\n");
+  }
+
+  private void attachTo(TableData data) {
+    if (data instanceof Subject subject) {
+      subject.attach(this);
+    }
+  }
+
+  private void detachFrom(TableData data) {
+    if (data instanceof Subject subject) {
+      subject.detach(this);
+    }
   }
 }
